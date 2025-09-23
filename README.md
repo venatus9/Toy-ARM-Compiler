@@ -20,3 +20,7 @@ After having installed all the required dependencies you should be able to run *
 chmod 755 build.sh
 ./build.sh
 ```
+The compiler can also be ran on its own through passing the target toy code through arguments:
+```
+python3 compiler.py <toy-code>
+```
