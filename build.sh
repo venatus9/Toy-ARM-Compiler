@@ -17,4 +17,4 @@ arm-linux-gnueabi-ld -o $OUT $OBJ
 
 echo "[!] RUNNING"
 qemu-arm ./$OUT
-echo -e "\n[*] Program exited with $?"
+echo -e "[*] Program exited with $?"

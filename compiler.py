@@ -10,7 +10,7 @@ def compile_to_arm(source):
     print(f"[*] Tokens: {tokens}")
 
     variables = {}  # var_name -> value
-    data_section = ""
+    data_section = "newline: .asciz \"\\n\"\n"
     text_section = ""
     result_count = 0
 
@@ -58,7 +58,13 @@ def compile_to_arm(source):
                 data_section += f"{b_label}: .word {variables[b_token]}\n"
             data_section += f"{buf_label}: .space 16\n"
 
-            op_instr = "ADD" if op == "+" else "SUB"
+            match op:
+                case "+":
+                    op_instr = "ADD"
+                case "-":
+                    op_instr = "SUB"
+                case _:
+                    raise Exception(f"[!] Undefined operator used: {op}")
 
             # Emit assembly for runtime math + print
             text_section += f"""
@@ -77,6 +83,12 @@ def compile_to_arm(source):
     LDR R1, ={buf_label}       @ string to print
     MOV R2, #16                @ max length
     MOV R7, #4                 @ syscall: write
+    SWI 0
+
+    LDR R0, =1              @ stdout
+    LDR R1, =newline        @ newline string
+    MOV R2, #1              @ length
+    MOV R7, #4              @ syscall: write
     SWI 0
 """
             result_count += 1
